@@ -23,10 +23,9 @@
     <!-- Main Content -->
     <main class="container mx-auto p-4 max-w-6xl">
         
-        <!-- Top Section: Upload & Search Box -->
+        <!-- Upload & Search -->
         <div class="grid md:grid-cols-3 gap-6 mb-10 mt-6">
-            
-            <!-- Upload Card -->
+            <!-- Upload -->
             <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
                 <h2 class="text-lg font-semibold mb-4 flex items-center gap-2"><i class="fas fa-cloud-upload-alt text-indigo-400"></i> Upload</h2>
                 <div class="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center hover:border-indigo-400 transition cursor-pointer relative" id="dropZone">
@@ -43,51 +42,43 @@
                 <div id="uploadStatus" class="mt-2 text-xs text-center min-h-[1.5em]"></div>
             </div>
 
-            <!-- Search Card -->
+            <!-- Search -->
             <div class="md:col-span-2 bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg flex flex-col justify-center">
                 <h2 class="text-lg font-semibold mb-4 flex items-center gap-2"><i class="fas fa-search text-indigo-400"></i> Semantic Search</h2>
                 <div class="relative">
-                    <input type="text" id="searchInput" placeholder="e.g., 'Snowy mountains' or 'Birthday cake'" 
+                    <input type="text" id="searchInput" placeholder="e.g., 'Snowy mountains' or 'October 2023' or 'Paris'" 
                         class="w-full bg-slate-900 border border-slate-600 rounded-lg py-3 pl-4 pr-12 focus:outline-none focus:border-indigo-500 text-slate-200">
                     <button onclick="performSearch()" class="absolute right-2 top-2 bg-indigo-600 hover:bg-indigo-700 text-white p-1.5 rounded-md transition">
                         <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
-                <p class="text-xs text-slate-500 mt-3"><i class="fas fa-info-circle"></i> Search results will appear below.</p>
+                <p class="text-xs text-slate-500 mt-3"><i class="fas fa-info-circle"></i> You can now search by Location and Date!</p>
             </div>
         </div>
 
-        <!-- SECTION 1: SEARCH RESULTS (Hidden by default) -->
+        <!-- SEARCH RESULTS -->
         <div id="searchSection" class="hidden mb-12 border-b border-slate-700 pb-8">
             <div class="flex justify-between items-end mb-4">
                 <h2 class="text-xl font-bold text-indigo-300 flex items-center gap-2">
                     <i class="fas fa-star"></i> Search Results <span id="searchQueryDisplay" class="text-sm font-normal text-slate-400 ml-2"></span>
                 </h2>
-                <button onclick="clearSearch()" class="text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-md border border-slate-600 transition">
-                    <i class="fas fa-times mr-1"></i> Clear Search
-                </button>
+                <button onclick="clearSearch()" class="text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-md border border-slate-600 transition">Clear</button>
             </div>
-            <div id="searchGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Search results inject here -->
-            </div>
+            <div id="searchGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
         </div>
 
-        <!-- SECTION 2: GALLERY (RECENT PHOTOS) -->
+        <!-- GALLERY -->
         <div id="gallerySection">
             <div class="flex justify-between items-end mb-4">
-                <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
-                    <i class="fas fa-clock"></i> Recent Photos
-                </h2>
+                <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2"><i class="fas fa-clock"></i> Recent Photos</h2>
                 <button onclick="loadGallery()" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-sync"></i> Refresh</button>
             </div>
-            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Gallery images inject here -->
-            </div>
+            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
         </div>
 
     </main>
 
-    <!-- Lightbox Modal -->
+    <!-- Lightbox -->
     <div id="lightbox" class="fixed inset-0 z-50 bg-black/90 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white/70 hover:text-white text-4xl">&times;</button>
         <div class="max-w-4xl w-full max-h-screen flex flex-col items-center">
@@ -99,7 +90,7 @@
     <script>
         const API_URL = "http://127.0.0.1:8000";
 
-        // --- UPLOAD LOGIC ---
+        // --- UPLOAD ---
         const fileInput = document.getElementById('fileInput');
         const uploadLoading = document.getElementById('uploadLoading');
         const uploadText = document.getElementById('uploadText');
@@ -118,11 +109,9 @@
 
             try {
                 const response = await fetch(`${API_URL}/upload/`, { method: 'POST', body: formData });
-                const data = await response.json();
                 if (response.ok) {
                     uploadStatus.className = "mt-2 text-xs text-center text-green-400";
-                    uploadStatus.textContent = "Uploaded! Processing in background...";
-                    // Refresh gallery to show the new pending image
+                    uploadStatus.textContent = "Uploaded! Extracting metadata...";
                     loadGallery();
                 } else throw new Error("Fail");
             } catch (err) {
@@ -135,33 +124,24 @@
             }
         });
 
-        // --- SEARCH LOGIC ---
+        // --- SEARCH & GALLERY ---
         const searchInput = document.getElementById('searchInput');
         const searchSection = document.getElementById('searchSection');
-        const searchQueryDisplay = document.getElementById('searchQueryDisplay');
 
         searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });
 
         async function performSearch() {
             const query = searchInput.value.trim();
-            if (!query) { 
-                clearSearch(); 
-                return; 
-            }
-
-            // Show section and skeleton
+            if (!query) { clearSearch(); return; }
+            
             searchSection.classList.remove('hidden');
-            searchQueryDisplay.textContent = `for "${query}"`;
+            document.getElementById('searchQueryDisplay').textContent = `for "${query}"`;
             renderSkeleton('searchGrid');
 
             try {
                 const response = await fetch(`${API_URL}/search/?q=${encodeURIComponent(query)}`);
-                const data = await response.json();
-                renderImages(data, 'searchGrid');
-            } catch (err) { 
-                console.error(err);
-                document.getElementById('searchGrid').innerHTML = `<p class="text-red-400">Search failed.</p>`;
-            }
+                renderImages(await response.json(), 'searchGrid');
+            } catch (err) { console.error(err); }
         }
 
         function clearSearch() {
@@ -170,28 +150,22 @@
             document.getElementById('searchGrid').innerHTML = "";
         }
 
-        // --- GALLERY LOGIC ---
         async function loadGallery() {
             renderSkeleton('galleryGrid');
             try {
                 const response = await fetch(`${API_URL}/gallery`);
-                const data = await response.json();
-                renderImages(data, 'galleryGrid');
-            } catch (err) { 
-                console.error(err); 
-            }
+                renderImages(await response.json(), 'galleryGrid');
+            } catch (err) { console.error(err); }
         }
 
-        // --- RENDER LOGIC ---
+        // --- RENDER ---
         function renderSkeleton(containerId) {
-            const grid = document.getElementById(containerId);
-            grid.innerHTML = Array(4).fill('<div class="bg-slate-800 h-64 rounded-xl animate-pulse border border-slate-700"></div>').join('');
+            document.getElementById(containerId).innerHTML = Array(4).fill('<div class="bg-slate-800 h-64 rounded-xl animate-pulse border border-slate-700"></div>').join('');
         }
 
         function renderImages(images, containerId) {
             const grid = document.getElementById(containerId);
             grid.innerHTML = "";
-
             if (images.length === 0) {
                 grid.innerHTML = `<div class="col-span-full text-center text-slate-500 py-10 italic">No photos found.</div>`;
                 return;
@@ -199,40 +173,37 @@
 
             images.forEach(img => {
                 const fullUrl = `${API_URL}${img.url}`;
+                const uniqueCardId = `card-${containerId}-${img.id}`;
                 const card = document.createElement('div');
                 
-                const isProcessing = img.caption === "Processing AI details...";
-                const captionClass = isProcessing ? "text-indigo-400 animate-pulse italic" : "text-slate-300";
-                const icon = isProcessing ? '<i class="fas fa-cog fa-spin mr-2"></i>' : '';
+                const isProcessing = img.caption === "Processing...";
+                const captionClass = isProcessing ? "text-indigo-400 animate-pulse italic" : "text-slate-200";
+                
+                // NEW: Metadata Display Logic
+                let metaHtml = "";
+                if (!isProcessing && (img.date_taken !== "Unknown Date" || img.location !== "Unknown Location")) {
+                    const loc = img.location !== "Unknown Location" ? `<span class="mr-2"><i class="fas fa-map-marker-alt text-indigo-400"></i> ${img.location}</span>` : "";
+                    const date = img.date_taken !== "Unknown Date" ? `<span><i class="fas fa-calendar text-indigo-400"></i> ${img.date_taken}</span>` : "";
+                    metaHtml = `<div class="mt-2 flex flex-wrap text-[10px] text-slate-400 gap-x-2">${loc}${date}</div>`;
+                }
 
-                // Unique ID to prevent conflicts if image is in both grids
-                const uniqueCardId = `card-${containerId}-${img.id}`;
-
-                card.className = "bg-slate-800 rounded-xl overflow-hidden shadow-lg border border-slate-700 group flex flex-col transition hover:-translate-y-1 hover:shadow-xl";
+                card.className = "bg-slate-800 rounded-xl overflow-hidden shadow-lg border border-slate-700 group flex flex-col transition hover:-translate-y-1";
                 card.id = uniqueCardId;
                 
                 card.innerHTML = `
                     <div class="relative h-48 overflow-hidden cursor-pointer" onclick="openLightbox('${fullUrl}', '${img.caption.replace(/'/g, "\\'")}')">
                         <img src="${fullUrl}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition"></div>
                         <i class="fas fa-expand absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 group-hover:opacity-100 transition drop-shadow-lg text-2xl"></i>
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
-                        <p class="text-sm ${captionClass} line-clamp-2 mb-4 flex-grow" title="${img.caption}">
-                            ${icon}${img.caption}
-                        </p>
-                        <div class="flex justify-between items-center border-t border-slate-700 pt-3">
+                        <p class="text-xs ${captionClass} line-clamp-2 flex-grow" title="${img.caption}">${img.caption}</p>
+                        ${metaHtml}
+                        <div class="flex justify-between items-center border-t border-slate-700 pt-3 mt-3">
                             <div class="flex gap-2">
-                                <a href="${API_URL}/download/${img.filename}" class="text-slate-400 hover:text-indigo-400 transition" title="Download">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                <button onclick="shareImage('${fullUrl}')" class="text-slate-400 hover:text-indigo-400 transition" title="Share">
-                                    <i class="fas fa-share-alt"></i>
-                                </button>
+                                <a href="${API_URL}/download/${img.filename}" class="text-slate-400 hover:text-indigo-400 transition"><i class="fas fa-download"></i></a>
+                                <button onclick="shareImage('${fullUrl}')" class="text-slate-400 hover:text-indigo-400 transition"><i class="fas fa-share-alt"></i></button>
                             </div>
-                            <button onclick="deleteImage('${img.id}', '${uniqueCardId}')" class="text-slate-500 hover:text-red-400 transition" title="Delete">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+                            <button onclick="deleteImage('${img.id}', '${uniqueCardId}')" class="text-slate-500 hover:text-red-400 transition"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>
                 `;
@@ -240,65 +211,33 @@
             });
         }
 
-        // --- ACTIONS ---
+        // --- ACTIONS (Same as before) ---
         function openLightbox(url, caption) {
             document.getElementById('lightboxImg').src = url;
             document.getElementById('lightboxCaption').textContent = caption;
             document.getElementById('lightbox').classList.remove('hidden');
         }
-
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.add('hidden');
-        }
-
-        async function deleteImage(id, cardElementId) {
-            if(!confirm("Delete this photo? This cannot be undone.")) return;
-            
-            const card = document.getElementById(cardElementId);
+        function closeLightbox() { document.getElementById('lightbox').classList.add('hidden'); }
+        
+        async function deleteImage(id, cardId) {
+            if(!confirm("Delete?")) return;
+            const card = document.getElementById(cardId);
             card.style.opacity = "0.5";
-            
             try {
                 const res = await fetch(`${API_URL}/photos/${id}`, { method: 'DELETE' });
-                if (res.ok) {
-                    // Remove visually
-                    card.remove();
-                    // Reload gallery to keep sync (in case we deleted from search view, it should vanish from gallery too)
-                    // We use a small timeout to avoid UI flicker
-                    setTimeout(loadGallery, 500);
-                } else {
-                    alert("Failed to delete");
-                    card.style.opacity = "1";
-                }
-            } catch (e) {
-                console.error(e);
-                card.style.opacity = "1";
-            }
+                if (res.ok) { card.remove(); setTimeout(loadGallery, 500); }
+            } catch (e) { card.style.opacity = "1"; }
         }
-
         async function shareImage(url) {
             if (navigator.share) {
-                try {
-                    const response = await fetch(url);
-                    const blob = await response.blob();
-                    const file = new File([blob], "pripix_share.jpg", { type: blob.type });
-                    await navigator.share({ title: 'Pripix Photo', text: 'Check out this photo!', files: [file] });
-                } catch (err) { 
-                    copyToClipboard(url); 
-                }
-            } else { 
-                copyToClipboard(url); 
-            }
+                const r = await fetch(url);
+                const b = await r.blob();
+                navigator.share({title:'Pripix', files:[new File([b],"img.jpg",{type:b.type})]});
+            } else navigator.clipboard.writeText(url).then(()=>alert("Copied!"));
         }
 
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => alert("Link copied!"), () => alert("Failed to copy link"));
-        }
-
-        // Init
         loadGallery();
-        
         document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeLightbox(); });
-
     </script>
 </body>
 </html>
