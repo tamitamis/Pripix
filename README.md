@@ -1,12 +1,10 @@
 # Pripix - Local AI Photo Storage
 
-----
 
 ## Privacy-First. Offline.
 
 Pripix is a self-hosted photo management tool that runs entirely on your local machine. It uses local AI models to index and caption your photos, enabling natural language search without uploading data to the cloud.
 
----
 
 ## Features
 
@@ -20,7 +18,7 @@ __Background Processing:__ Uploads are instant; AI runs in the background.
 
 __Docker Support:__ Isolated container for stable deployment.
 
----
+
 
 ## Installation
 
@@ -50,7 +48,6 @@ __Prerequisite:__ Python 3.10+ installed (Add to PATH).
 
 3. The script installs dependencies and launches the app automatically.
 
----
 
 ## Tech Stack
 
@@ -62,7 +59,7 @@ __AI Models:__ BLIP (Captions), all-MiniLM-L6-v2 (Embeddings)
 
 __Frontend:__ HTML5, JavaScript, TailwindCSS
 
----
+
 
 ## Directory Structure
 
@@ -77,7 +74,6 @@ __Frontend:__ HTML5, JavaScript, TailwindCSS
 └── requirements.txt   # Python dependency manifest
 ```
 
----
 
 ## Troubleshooting
 
@@ -85,7 +81,6 @@ __Frontend:__ HTML5, JavaScript, TailwindCSS
 
 - Docker "EOF" Error: Increase Docker memory to 4GB in Settings > Resources.
 
----
 
 ## Contributing
 
