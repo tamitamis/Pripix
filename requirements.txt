@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+chromadb
+sentence-transformers
+transformers
+torch
+pillow
+pydantic

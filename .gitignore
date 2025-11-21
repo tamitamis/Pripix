@@ -1,0 +1,35 @@
+--- Python Basics ---
+
+pycache/
+*.pyc
+*.pyo
+*.pyd
+
+--- Virtual Environment ---
+
+We do not want to upload the installed libraries.
+
+Others will install them using requirements.txt
+
+venv/
+env/
+.venv/
+
+--- Application Data (CRITICAL) ---
+
+Do not upload the Vector Database
+
+chroma_db/
+
+--- User Content (CRITICAL) ---
+
+Do not upload your personal photos!
+
+static/images/*
+!static/images/.gitkeep
+
+--- System Files ---
+
+.DS_Store
+Thumbs.db
+.vscode/
