@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  pripix:
+    build: .
+    container_name: pripix_server
+    
+    # Restart automatically if it crashes or you reboot Windows
+    restart: unless-stopped
+    
+    ports:
+      - "8000:8000"
+    
+    volumes:
+      # --- THE LIVE TUNNELS ---
+      
+      # 1. Map your Code: Edits in VS Code appear in Docker
+      - ./backend.py:/app/backend.py
+      - ./index.html:/app/index.html
+      
+      # 2. Map your Photos: Keep photos on your hard drive
+      - ./static/images:/app/static/images
+      
+      # 3. Map the Database: Keep the 'brain' on your hard drive
+      - ./chroma_db:/app/chroma_db
+      
+      # 4. Cache AI Models: So it doesn't redownload every time
+      - hf_cache:/root/.cache/huggingface
+
+volumes:
+  hf_cache:
