@@ -1,72 +1,101 @@
-Pripix - Local AI Photo Storage
+# Pripix - Local AI Photo Storage
 
-Privacy-First. Offline. Intelligent.
+----
+
+## Privacy-First. Offline.
 
 Pripix is a self-hosted photo management tool that runs entirely on your local machine. It uses local AI models to index and caption your photos, enabling natural language search without uploading data to the cloud.
 
-Features
+---
 
-100% Private: No cloud uploads. Data stays on your hard drive.
+## Features
 
-Semantic Search: Search by meaning (e.g., "dog in snow") using the all-MiniLM-L6-v2 model.
+__100% Private:__ No cloud uploads. Data stays on your hard drive.
 
-Auto-Captioning: Automatically describes photos upon upload using the Salesforce BLIP model.
+__Semantic Search:__ Search by meaning (e.g., "dog in snow") using the all-MiniLM-L6-v2 model.
 
-Background Processing: Uploads are instant; AI runs in the background.
+__Auto-Captioning:__ Automatically describes photos upon upload using the Salesforce BLIP model.
 
-Docker Support: Isolated container for stable deployment.
+__Background Processing:__ Uploads are instant; AI runs in the background.
 
-Installation
+__Docker Support:__ Isolated container for stable deployment.
 
-Method 1: Docker (Recommended)
+---
 
-Prerequisite: Docker Desktop installed.
+## Installation
+
+__Method 1: Docker (Recommended)__
+
+__Prerequisite:__ Docker Desktop installed.
 
 Clone/Download the repository.
 
-Run:
+__Run__:
 
+```
 docker-compose up --build
+```
 
-
-Open: http://localhost:8000
+__Open__: `http://localhost:8000`
 
 First run downloads ~2GB of models. Subsequent runs are instant.
 
-Method 2: Windows Script
+__Method 2: Windows Script__
 
-Prerequisite: Python 3.10+ installed (Add to PATH).
+__Prerequisite:__ Python 3.10+ installed (Add to PATH).
 
-Download the source code.
+1. Download the source code.
 
-Run start_pripix.bat.
+2. Run `start_pripix.bat`.
 
-The script installs dependencies and launches the app automatically.
+3. The script installs dependencies and launches the app automatically.
 
-Tech Stack
+---
 
-Backend: FastAPI (Python)
+## Tech Stack
 
-DB: ChromaDB (Vector Store)
+__Backend:__ FastAPI (Python)
 
-AI Models: BLIP (Captions), all-MiniLM-L6-v2 (Embeddings)
+__DB:__ ChromaDB (Vector Store)
 
-Frontend: HTML5, JavaScript, TailwindCSS
+__AI Models:__ BLIP (Captions), all-MiniLM-L6-v2 (Embeddings)
 
-Directory Structure
+__Frontend:__ HTML5, JavaScript, TailwindCSS
 
-pripix/
+---
+
+## Directory Structure
+
+```text pripix/
 ├── chroma_db/         # Local Database
-├── static/images/     # Raw Photos
-├── backend.py         # App Logic
+├── static/
+│   └── images/        # Raw image storage
+├── backend.py         # Core application logic and API endpoints
 ├── Dockerfile         # Docker Build
 ├── docker-compose.yml # Docker Config
 ├── start_pripix.bat   # Windows Installer
-└── requirements.txt   # Python Libs
+└── requirements.txt   # Python dependency manifest
+```
 
+---
 
-Troubleshooting
+## Troubleshooting
 
-First run is slow: It is downloading AI models. Wait for it to finish.
+- First run is slow: It is downloading AI models. Wait for it to finish.
 
-Docker "EOF" Error: Increase Docker memory to 4GB in Settings > Resources.
+- Docker "EOF" Error: Increase Docker memory to 4GB in Settings > Resources.
+
+---
+
+## Contributing
+
+1. Fork the repository.
+
+2. Create a feature branch (`git checkout -b feature/NewFeature`).
+
+3. Commit changes (`git commit -m 'Implement NewFeature'`).
+
+4. Push to the branch (`git push origin feature/NewFeature`).
+
+5. Submit a Pull Request.
+
